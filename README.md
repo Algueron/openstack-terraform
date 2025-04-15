@@ -72,3 +72,16 @@ openstack router create --enable --external-gateway public-net infrastructure-ro
 ````bash
 openstack router add subnet infrastructure-router infrastructure-subnet
 ````
+
+## Security groups
+
+- Create a security group to allow SSH
+````bash
+openstack security group create --stateful allow-ssh
+````
+
+- Add the rule to allow SSH
+````bash
+openstack security group rule create --remote-ip "192.168.0.0/24" --protocol tcp --dst-port 22 --ingress allow-ssh
+````
+
