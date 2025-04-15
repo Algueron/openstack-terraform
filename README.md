@@ -45,3 +45,30 @@ wget https://raw.githubusercontent.com/Algueron/openstack-terraform/main/terrafo
 ````bash
 sed -i -e "s~TF_PASSWORD~$TF_PASSWORD~g" terraform-openrc.sh
 ````
+
+## Network setup
+
+- Log as Openstack terraform user
+````bash
+source terraform-openrc.sh
+````
+
+- Create a private network for infrastructure
+````bash
+openstack network create --enable infrastructure-net
+````
+
+- Create a private subnet
+````bash
+openstack subnet create --subnet-range "192.168.75.0/24" --dhcp --ip-version 4 --dns-nameserver "192.168.1.15" --network infrastructure-net infrastructure-subnet
+````
+
+- Create a router connected to the Provider network
+````bash
+openstack router create --enable --external-gateway public-net infrastructure-router
+````
+
+- Connect the router to the infrastructure network
+````bash
+openstack router add subnet infrastructure-router infrastructure-subnet
+````
