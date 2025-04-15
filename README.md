@@ -85,3 +85,14 @@ openstack security group create --stateful allow-ssh
 openstack security group rule create --remote-ip "192.168.0.0/24" --protocol tcp --dst-port 22 --ingress allow-ssh
 ````
 
+## SSH Key
+
+- Create a keypair
+````bash
+openstack keypair create --private-key terraform.key --type ssh terraform-key
+````
+
+- Set the correct permissions on the private key
+````bash
+chmod 400 terraform.key
+````
