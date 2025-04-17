@@ -119,3 +119,34 @@ TF_FLOATING_IP=$(openstack floating ip list -f value -c "Floating IP Address")
 openstack server add floating ip terraform $TF_FLOATING_IP
 ````
 
+## Terraform Setup
+
+- Log into the Terraform VM using the floating ip and private key
+````bash
+ssh -i terraform.key ubuntu@$TF_FLOATING_IP
+````
+
+- Install gpg.
+````bash
+sudo apt install -y gpg
+````
+
+- Download the signing key to a new keyring.
+````bash
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+````
+
+- Verify the key's fingerprint.
+````bash
+sudo gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
+````
+
+- Add the official HashiCorp Linux repository.
+````bash
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+````
+
+- Update and install Terraform.
+````bash
+sudo apt-get update && sudo apt-get install terraform
+````
