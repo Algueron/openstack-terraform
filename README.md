@@ -96,3 +96,26 @@ openstack keypair create --private-key terraform.key --type ssh terraform-key
 ````bash
 chmod 400 terraform.key
 ````
+
+## Virtual Machine
+
+- Create an Ubuntu virtual machine
+````bash
+openstack server create --flavor t2.small --image ubuntu-server-24.04 --network infrastructure-net --security-group default --security-group allow-ssh --key-name terraform-key terraform
+````
+
+- Create a Floating IP
+````bash
+openstack floating ip create public-net
+````
+
+- Store the IP generated
+````bash
+TF_FLOATING_IP=$(openstack floating ip list -f value -c "Floating IP Address")
+````
+
+- Assign the floating IP to the Virtual Machine
+````bash
+openstack server add floating ip terraform $TF_FLOATING_IP
+````
+
